@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "814697867223",
+    "project_id": "doan-59fa5",
+    "storage_bucket": "doan-59fa5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814697867223:android:a8712855971d86779f0d92",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0Thm5CQdqPSKSGbnBMd0cxICbbwHcT3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
