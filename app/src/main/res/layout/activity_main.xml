@@ -23,6 +23,16 @@
             android:padding="16dp"
             android:background="@color/white">
 
+            <ImageButton
+                android:id="@+id/btn_open_drawer"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_menu_black_24dp"
+                android:contentDescription="Mở Menu"
+                android:background="@android:color/transparent"
+                android:tint="@color/black"
+                android:layout_gravity="start|top"
+                android:layout_marginBottom="8dp"/>
             <TextView
                 android:id="@+id/text_welcome"
                 android:layout_width="match_parent"

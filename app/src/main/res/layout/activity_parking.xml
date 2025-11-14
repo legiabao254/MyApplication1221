@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textStyle="italic"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         tools:text="Trạng thái: Sẵn sàng gửi xe." />
 
     <TextView
@@ -42,12 +43,53 @@
         android:layout_marginBottom="16dp"
         tools:text="Giờ hiện tại: 14:30:00 11/11/2025" />
 
+    <!-- ======================================================= -->
+    <!-- ============== PHẦN MỚI: CHỌN LOẠI XE =============== -->
+    <!-- ======================================================= -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chọn loại xe:"
+        android:textSize="16sp"/>
+
+    <RadioGroup
+        android:id="@+id/rg_vehicle_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/rb_motorbike"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Xe máy"
+            android:checked="true"/> <!-- Mặc định chọn xe máy -->
+
+        <RadioButton
+            android:id="@+id/rb_car"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ô tô"/>
+    </RadioGroup>
+    <!-- ======================================================= -->
+    <!-- ==================== KẾT THÚC PHẦN MỚI ================== -->
+    <!-- ======================================================= -->
+
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layoutLicensePlate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:hint="Biển số xe">
+        android:hint="Biển số xe"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_camera_alt_black_24dp"
+        app:endIconContentDescription="Quét biển số xe">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etLicensePlate"
             android:layout_width="match_parent"

@@ -7,47 +7,49 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-// Imports không còn cần thiết cho việc xử lý Token/Claims
-// import com.google.android.gms.tasks.Task;
-// import com.google.android.gms.tasks.OnCompleteListener;
-// import com.google.firebase.auth.GetTokenResult;
 
 import com.example.myapplication.authapp.LoginActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-// Import lớp Activity đã được sửa lỗi gần nhất
-import com.example.myapplication.ParkingSlotActivity;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private ListenerRegistration dashboardListener;
+    private ListenerRegistration userProfileListener;
+
+    private String userRole;
+
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private String userRole; // Lưu role để dùng chung
-
-    // Khai báo biến thành viên cho các View trong Header
-    private TextView tvName;
-    private TextView tvEmail;
-    private TextView tvRole;
-    private Button btnLogout;
-
-    // Khai báo biến thành viên cho các View trong Layout chính
-    private CardView cardAdmin;
+    private ImageButton btnOpenDrawer;
+    private TextView tvName, tvEmail, tvRole, tvWalletBalance;
+    private CardView cardAdminReport;
     private Button btnStaffCheckIn;
-    private Button btnViewFullReport; // Khai báo nút xem báo cáo chi tiết
+    private TextView tvAvailableSlots, tvOccupiedSlots;
+
+    // Thêm Button báo cáo
+    private Button btnViewFullReportAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,152 +57,205 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        drawerLayout = findViewById(R.id.drawer_layout);
+        db = FirebaseFirestore.getInstance();
 
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+        if (mAuth.getCurrentUser() == null) {
+            goToLogin();
             return;
         }
 
-        // 1. Ánh xạ và lưu trữ các View trong Header (Chỉ làm 1 lần)
-        View headerView = navigationView.getHeaderView(0);
-        tvName = headerView.findViewById(R.id.tvName);
-        tvEmail = headerView.findViewById(R.id.tvEmail);
-        tvRole = headerView.findViewById(R.id.tvRole);
-        btnLogout = headerView.findViewById(R.id.btnLogout);
-
-        // 2. Ánh xạ các View trong Layout chính
-        cardAdmin = findViewById(R.id.card_admin_revenue_report_main_activity);
-        btnStaffCheckIn = findViewById(R.id.btn_staff_check_in);
-        btnViewFullReport = findViewById(R.id.btn_view_full_report_admin);
-
-
-        // Tải thông tin người dùng và Role
-        loadUserRole();
-        updateUserInfoInHeader();
-
-        // Cập nhật các thành phần UI theo Role
-        setupUIAccordingToRole();
-
-        btnLogout.setOnClickListener(v -> {
-            logoutUser();
-        });
+        mapViews();
+        setupClickListeners();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        loadUserRole();
-        updateUserInfoInHeader();
-        setupUIAccordingToRole();
+    protected void onStart() {
+        super.onStart();
+        setupDashboardListener();
+        setupUserProfileListener();
     }
 
-    private void updateUserInfoInHeader() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null && tvName != null && tvEmail != null) {
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (dashboardListener != null) dashboardListener.remove();
+        if (userProfileListener != null) userProfileListener.remove();
+    }
 
-            String name = user.getDisplayName();
-            tvName.setText(name != null && !name.isEmpty() ? name :
-                    (user.getEmail() != null ? user.getEmail().split("@")[0] : "Người dùng ẩn danh"));
-            tvEmail.setText(user.getEmail() != null ? user.getEmail() : "Không có Email");
+    private void mapViews() {
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        btnOpenDrawer = findViewById(R.id.btn_open_drawer);
+
+        if (navigationView != null) {
+            View headerView = navigationView.getHeaderView(0);
+            tvName = headerView.findViewById(R.id.tvName);
+            tvEmail = headerView.findViewById(R.id.tvEmail);
+            tvRole = headerView.findViewById(R.id.tvRole);
+            tvWalletBalance = headerView.findViewById(R.id.tvWalletBalance);
+        }
+
+        cardAdminReport = findViewById(R.id.card_admin_revenue_report_main_activity);
+        // Ánh xạ Button báo cáo
+        btnViewFullReportAdmin = findViewById(R.id.btn_view_full_report_admin);
+
+        btnStaffCheckIn = findViewById(R.id.btn_staff_check_in);
+        tvAvailableSlots = findViewById(R.id.tv_available_slots);
+        tvOccupiedSlots = findViewById(R.id.tv_occupied_slots);
+    }
+
+    private void setupClickListeners() {
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
+
+        if (btnOpenDrawer != null) {
+            btnOpenDrawer.setOnClickListener(v -> {
+                if (drawerLayout != null) drawerLayout.openDrawer(GravityCompat.START);
+            });
+        }
+
+        // Gán sự kiện cho cả CardView và Button bên trong
+        if (cardAdminReport != null) {
+            cardAdminReport.setOnClickListener(v -> goToAdminReport());
+        }
+        if (btnViewFullReportAdmin != null) {
+            btnViewFullReportAdmin.setOnClickListener(v -> goToAdminReport());
         }
     }
 
-    private void loadUserRole() {
-        SharedPreferences sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-        userRole = sharedPref.getString("USER_ROLE_KEY", "user").toLowerCase();
+    private void setupUserProfileListener() {
+        if (userProfileListener != null) return;
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            goToLogin();
+            return;
+        }
 
-        if (tvRole != null) {
-            tvRole.setText("Vai trò: " + userRole.toUpperCase());
+        final DocumentReference userRef = db.collection("users").document(currentUser.getUid());
+        userProfileListener = userRef.addSnapshotListener(this, (snapshot, error) -> {
+            if (error != null) {
+                Log.w(TAG, "Lỗi lắng nghe thông tin người dùng.", error);
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                userRole = snapshot.getString("role");
+                long balance = 0L;
+                Object balanceObject = snapshot.get("wallet_balance");
+                if (balanceObject instanceof Number) {
+                    balance = ((Number) balanceObject).longValue();
+                }
+                updateHeaderUI(snapshot.getString("name"), snapshot.getString("email"), userRole, balance);
+                setupUIAccordingToRole();
+            } else {
+                logoutUser();
+            }
+        });
+    }
+
+    private void setupDashboardListener() {
+        if (dashboardListener != null) return;
+        dashboardListener = db.collection("parking_slots").addSnapshotListener((snapshots, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Lỗi lắng nghe dashboard.", e);
+                return;
+            }
+            if (snapshots != null) {
+                int availableCount = 0;
+                int occupiedCount = 0;
+                for (QueryDocumentSnapshot doc : snapshots) {
+                    String status = doc.getString("trang_thai");
+                    if ("trong".equalsIgnoreCase(status)) availableCount++;
+                    else if ("dang_gui".equalsIgnoreCase(status)) occupiedCount++;
+                }
+                if (tvAvailableSlots != null) tvAvailableSlots.setText(String.valueOf(availableCount));
+                if (tvOccupiedSlots != null) tvOccupiedSlots.setText(String.valueOf(occupiedCount));
+            }
+        });
+    }
+
+    private void updateHeaderUI(String name, String email, String role, long balance) {
+        if (tvName != null) tvName.setText(name);
+        if (tvEmail != null) tvEmail.setText(email);
+        if (tvRole != null) tvRole.setText(role != null ? role.toUpperCase() : "USER");
+        if (tvWalletBalance != null) {
+            tvWalletBalance.setText(NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(balance));
         }
     }
 
     private void setupUIAccordingToRole() {
-        // 1. Ẩn/hiện Menu Drawer
-        Menu navMenu = navigationView.getMenu();
-        MenuItem parkingItem = navMenu.findItem(R.id.nav_parking);
-        boolean shouldShowParking = userRole.equalsIgnoreCase("user") || userRole.equalsIgnoreCase("admin") || userRole.equalsIgnoreCase("staff");
-        if (parkingItem != null) {
-            parkingItem.setVisible(shouldShowParking);
+        if (userRole == null) return;
+        boolean isAdmin = "admin".equalsIgnoreCase(userRole);
+        boolean isUser = "user".equalsIgnoreCase(userRole);
+        boolean isStaff = "staff".equalsIgnoreCase(userRole);
+
+        // *** SỬA LẠI HOÀN TOÀN LOGIC NÀY ***
+        if (navigationView != null) {
+            Menu navMenu = navigationView.getMenu();
+
+            // Tìm và điều khiển trực tiếp item "Xác nhận nạp tiền"
+            MenuItem confirmDepositItem = navMenu.findItem(R.id.nav_admin_confirm_deposit);
+            if (confirmDepositItem != null) {
+                confirmDepositItem.setVisible(isAdmin);
+            }
+
+            // Giữ nguyên logic cho các item khác
+            MenuItem historyItem = navMenu.findItem(R.id.nav_parking_history);
+            if (historyItem != null) historyItem.setVisible(isAdmin || isUser);
         }
 
-        // 2. Ẩn/hiện Card và Button trong Layout chính
-        if (cardAdmin == null || btnStaffCheckIn == null || btnViewFullReport == null) return;
-
-        if (userRole.equalsIgnoreCase("admin")) {
-            cardAdmin.setVisibility(View.VISIBLE);
-            btnStaffCheckIn.setVisibility(View.GONE);
-
-            // ĐÃ SỬA: Chỉ cần kiểm tra role cục bộ và mở Activity.
-            // Firebase Rules (backend) sẽ chịu trách nhiệm cấp quyền truy vấn data.
-            btnViewFullReport.setOnClickListener(v -> {
-                // Bỏ qua hàm checkAndOpenAdminReport() cũ (kiểm tra Custom Claim)
-                Intent intent = new Intent(MainActivity.this, AdminReportActivity.class);
-                startActivity(intent);
-            });
-
-        } else if (userRole.equalsIgnoreCase("staff")) {
-            cardAdmin.setVisibility(View.GONE);
-            btnStaffCheckIn.setVisibility(View.VISIBLE);
-        } else { // Role user hoặc undefined
-            cardAdmin.setVisibility(View.GONE);
-            btnStaffCheckIn.setVisibility(View.GONE);
-        }
+        if (cardAdminReport != null) cardAdminReport.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
+        if (btnStaffCheckIn != null) btnStaffCheckIn.setVisibility(isStaff ? View.VISIBLE : View.GONE);
     }
 
-    private void clearUserRole() {
-        SharedPreferences sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.remove("USER_ROLE_KEY");
-        editor.apply();
-    }
-
-    private void logoutUser() {
-        mAuth.signOut();
-        clearUserRole();
-
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-
-        Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show();
-    }
-
-    // -------------------------------------------------------------
-    // HÀM checkAndOpenAdminReport() CŨ ĐÃ BỊ LOẠI BỎ KHỎI onClickListener CỦA NÚT.
-    // -------------------------------------------------------------
-
-
-    // Xử lý sự kiện Navigation Drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
+        final int id = item.getItemId();
         Intent intent = null;
 
         if (id == R.id.nav_home) {
-            // Đã ở trang chủ, không cần làm gì
+            // Không làm gì
         } else if (id == R.id.nav_profile_detail) {
-            intent = new Intent(MainActivity.this, ProfileDetailActivity.class);
+            intent = new Intent(this, ProfileDetailActivity.class);
+        } else if (id == R.id.nav_parking_history) {
+            intent = new Intent(this, ParkingHistoryActivity.class);
+            intent.putExtra("USER_ROLE", userRole);
         } else if (id == R.id.nav_parking) {
-            intent = new Intent(MainActivity.this, ParkingSlotActivity.class);
-            intent.putExtra("USER_ROLE", userRole); // Truyền Role
+            intent = new Intent(this, ParkingSlotActivity.class);
+            intent.putExtra("USER_ROLE", userRole);
+        } else if (id == R.id.nav_top_up) {
+            intent = new Intent(this, TopUpActivity.class);
+        } else if (id == R.id.nav_admin_confirm_deposit) {
+            intent = new Intent(this, AdminConfirmDepositActivity.class);
         } else if (id == R.id.nav_logout) {
             logoutUser();
-        } else {
-            Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
         }
 
         if (intent != null) {
             startActivity(intent);
         }
 
-        drawerLayout.closeDrawer(GravityCompat.START);
+        if (drawerLayout != null) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
         return true;
+    }
+
+    // Hàm helper để tránh lặp code
+    private void goToAdminReport() {
+        startActivity(new Intent(MainActivity.this, AdminReportActivity.class));
+    }
+
+    private void logoutUser() {
+        mAuth.signOut();
+        goToLogin();
+    }
+
+    private void goToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

@@ -1,94 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Sử dụng RelativeLayout hoặc FrameLayout để lớp phủ có thể đè lên trên -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:background="#FFFFFF"
-    tools:context=".ParkingActivity">
+    tools:context=".PaymentActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PHIẾU THANH TOÁN"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="#388E3C"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="24dp"/>
-
+    <!-- Nội dung chính của màn hình, đặt trong một LinearLayout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@drawable/rounded_border"
-        android:layout_marginBottom="24dp">
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HÓA ĐƠN THANH TOÁN"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginBottom="24dp"/>
 
         <TextView
             android:id="@+id/tvPaymentSlotId"
-            style="@style/PaymentDetailText"
-            tools:text="Slot: A1" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"
+            tools:text="Vị trí: A1" />
 
         <TextView
             android:id="@+id/tvPaymentLicensePlate"
-            style="@style/PaymentDetailText"
-            tools:text="Biển số xe: 51G-123.45" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"
+            tools:text="Biển số xe: 29H1-12345" />
 
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="8dp"/>
+        <TextView
+            android:id="@+id/tvPaymentVehicleType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"
+            tools:text="Loại xe: Xe máy" />
+
+        <TextView
+            android:id="@+id/tvPaymentUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="16dp"
+            tools:text="Tài khoản: user@example.com" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="16dp"/>
 
         <TextView
             android:id="@+id/tvPaymentStartTime"
-            style="@style/PaymentDetailText"
-            tools:text="Bắt đầu: 10:00:00 11/11/2025" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            tools:text="Bắt đầu: 10:00:00 03/12/2025" />
 
         <TextView
             android:id="@+id/tvPaymentEndTime"
-            style="@style/PaymentDetailText"
-            tools:text="Kết thúc: 14:00:00 11/11/2025" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            tools:text="Kết thúc: 11:30:00 03/12/2025" />
 
         <TextView
             android:id="@+id/tvPaymentDuration"
-            style="@style/PaymentDetailText"
-            android:textStyle="bold"
-            tools:text="Tổng thời gian: 4 giờ" />
-
-        <View android:layout_width="match_parent" android:layout_height="2dp" android:background="#388E3C" android:layout_marginVertical="12dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TỔNG PHÍ THANH TOÁN"
             android:textSize="16sp"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_marginBottom="24dp"
+            tools:text="Tổng thời gian: ~2 giờ" />
 
         <TextView
             android:id="@+id/tvPaymentTotalFee"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:textColor="#F44336"
-            android:layout_gravity="center_horizontal"
-            tools:text="20.000 VNĐ" />
+            android:gravity="center"
+            android:textColor="@color/purple_700"
+            android:layout_marginBottom="24dp"
+            tools:text="10,000 VNĐ" />
+
+        <!-- Sử dụng weight để các nút chiếm không gian còn lại -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <!-- === NÚT XÁC NHẬN THANH TOÁN (THÊM MỚI) === -->
+        <Button
+            android:id="@+id/btnConfirmPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đang tải hóa đơn..."
+            android:enabled="false"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:backgroundTint="@color/purple_500"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- === NÚT HỦY/ĐÓNG (THAY ĐỔI) === -->
+        <Button
+            android:id="@+id/btnClosePayment"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hủy"
+            android:textSize="16sp"/>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvPaymentUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_gravity="center_horizontal"
-        tools:text="Tài khoản: user@example.com" />
-
-    <Button
-        android:id="@+id/btnClosePayment"
+    <!-- === LỚP PHỦ CHỜ (THÊM MỚI) === -->
+    <!-- Nó sẽ đè lên trên toàn bộ LinearLayout ở trên khi được kích hoạt -->
+    <FrameLayout
+        android:id="@+id/loading_overlay"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="HOÀN TẤT VÀ ĐÓNG"
-        android:layout_marginTop="32dp"
-        android:padding="12dp" />
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        tools:visibility="gone">
 
-</LinearLayout>
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true" />
+    </FrameLayout>
+
+</RelativeLayout>

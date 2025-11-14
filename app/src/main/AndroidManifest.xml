@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -59,10 +62,34 @@
             android:exported="false"
             android:label="Thanh toán" />
 
-        <activity android:name=".AdminReportActivity"
-            android:label="Báo cáo Doanh thu"/>
+        <activity
+            android:name=".LPRScannerActivity"
+            android:exported="false"
+            android:label="Quét Biển số"
+            android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".ParkingHistoryActivity"
+            android:exported="false"
+            android:label="Lịch sử Gửi xe" />
 
+        <!-- === KHAI BÁO CHO CÁC TÍNH NĂNG MỚI === -->
+
+        <activity
+            android:name=".TopUpActivity"
+            android:label="Nạp tiền vào Ví"
+            android:exported="false" />
+
+        <activity
+            android:name=".AdminConfirmDepositActivity"
+            android:label="Xác nhận Nạp tiền"
+            android:exported="false" />
+
+        <!-- SỬA LỖI: Chỉ giữ lại một khai báo duy nhất cho AdminReportActivity -->
+        <activity
+            android:name=".AdminReportActivity"
+            android:label="Báo cáo Doanh thu"
+            android:exported="false" />
 
     </application>
 </manifest>

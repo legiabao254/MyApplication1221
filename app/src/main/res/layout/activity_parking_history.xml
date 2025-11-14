@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    tools:context=".ParkingHistoryActivity">
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_search_view"
+        android:queryHint="Tìm theo biển số xe..."
+        android:layout_alignParentTop="true"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:layout_below="@id/search_view_history"/>
+
+    <!-- ProgressBar nằm giữa màn hình -->
+    <ProgressBar
+        android:id="@+id/progress_bar_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+    <!-- TextView cũng nằm giữa màn hình -->
+    <TextView
+        android:id="@+id/tv_no_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Không có lịch sử gửi xe."
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:textSize="16sp"/>
+</RelativeLayout>

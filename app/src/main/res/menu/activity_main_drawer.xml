@@ -3,49 +3,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <!-- === NHÓM CHỨC NĂNG CHUNG === -->
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home"
-            android:fontFamily="sans-serif" />
+            android:icon="@drawable/ic_home"
+            android:title="Trang chủ" />
+
+        <item
+            android:id="@+id/nav_parking"
+            android:icon="@drawable/ic_local_parking"
+            android:title="Gửi xe" />
+
+        <item
+            android:id="@+id/nav_parking_history"
+            android:icon="@drawable/ic_history"
+            android:title="Lịch sử Gửi xe" />
+
+        <item
+            android:id="@+id/nav_top_up"
+            android:icon="@drawable/ic_account_balance_wallet"
+            android:title="Nạp tiền vào Ví" />
 
         <item
             android:id="@+id/nav_profile_detail"
-            android:icon="@drawable/outline_account_box_24"  android:title="Cập nhật Hồ sơ"
-            android:fontFamily="sans-serif" />
-
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery"
-            android:fontFamily="sans-serif" />
-
-
-
-        <item
-            android:id="@+id/nav_logout"
-            android:title="Đăng xuất"
-            android:icon="@drawable/ic_out" />
-
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow"
-            android:fontFamily="sans-serif" />
+            android:icon="@drawable/outline_account_box_24"
+            android:title="Cập nhật Hồ sơ" />
     </group>
 
+    <!-- === NHÓM CHỨC NĂNG DÀNH RIÊNG CHO ADMIN - KHÔNG CẦN GROUP NỮA === -->
+    <!-- Item này sẽ được điều khiển trực tiếp bằng code Java -->
     <item
-        android:id="@+id/btnLogout"
-        android:icon="@drawable/ic_out"
-        android:title="Logout"
-        android:fontFamily="sans-serif"
-        android:orderInCategory="100" />
-    <item
-        android:id="@+id/nav_parking"
-        android:title="Gửi xe"
-        android:icon="@drawable/ic_local_parking" />
+        android:id="@+id/nav_admin_confirm_deposit"
+        android:icon="@drawable/ic_bank"
+        android:title="Xác nhận nạp tiền"
+        android:visible="false"
+        tools:visible="true" />
 
-
+    <!-- === NHÓM ĐĂNG XUẤT === -->
+    <group
+        android:id="@+id/group_logout"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_out"
+            android:title="Đăng xuất" />
+    </group>
 
 </menu>

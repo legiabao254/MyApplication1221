@@ -2,37 +2,46 @@ package com.example.myapplication.authapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.Context;
+import android.text.TextUtils; // Import thêm TextUtils để kiểm tra chuỗi rỗng
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText edtEmail, edtPassword;
-    Button btnLogin, btnGoRegister;
-    FirebaseAuth mAuth;
-    FirebaseFirestore db;
+    private EditText edtEmail, edtPassword;
+    private Button btnLogin, btnGoRegister;
+    private FirebaseAuth mAuth;
+    // Không cần FirebaseFirestore ở đây nữa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // 1. Khởi tạo Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
 
+        // 2. Ánh xạ Views
+        mapViews();
+
+        // 3. Thiết lập sự kiện click
+        setupClickListeners();
+    }
+
+    private void mapViews() {
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnGoRegister = findViewById(R.id.btnGoRegister);
+    }
 
+    private void setupClickListeners() {
         btnLogin.setOnClickListener(v -> loginUser());
         btnGoRegister.setOnClickListener(v ->
                 startActivity(new Intent(this, RegisterActivity.class)));
@@ -42,49 +51,38 @@ public class LoginActivity extends AppCompatActivity {
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
 
-        if(email.isEmpty() || password.isEmpty()){
+        // Sử dụng TextUtils để kiểm tra chuỗi rỗng, an toàn hơn
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Vui lòng nhập đủ thông tin", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Vô hiệu hóa nút bấm để tránh người dùng click nhiều lần
+        btnLogin.setEnabled(false);
+
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if(user != null){
-                            String uid = user.getUid();
-
-                            db.collection("users")
-                                    .document(uid)
-                                    .get()
-                                    .addOnSuccessListener(documentSnapshot -> {
-                                        String role = "user";
-
-                                        if(documentSnapshot.exists()){
-                                            String tempRole = documentSnapshot.getString("role");
-                                            if(tempRole != null) role = tempRole;
-                                        }
-
-                                        // Lưu role vào SharedPreferences
-                                        SharedPreferences sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPref.edit();
-                                        editor.putString("USER_ROLE_KEY", role.toLowerCase());
-                                        editor.apply();
-
-                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                        finish();
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Toast.makeText(LoginActivity.this,
-                                                "Lỗi khi lấy dữ liệu: " + e.getMessage(),
-                                                Toast.LENGTH_SHORT).show();
-                                    });
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Đăng nhập thành công, chuyển ngay sang MainActivity
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                        goToMainActivity();
                     } else {
-                        Toast.makeText(this,
-                                "Sai tài khoản hoặc mật khẩu",
-                                Toast.LENGTH_SHORT).show();
+                        // Đăng nhập thất bại, hiển thị thông báo và bật lại nút bấm
+                        Toast.makeText(this, "Sai tài khoản hoặc mật khẩu", Toast.LENGTH_SHORT).show();
+                        btnLogin.setEnabled(true);
                     }
                 });
+    }
+
+    /**
+     * CẬP NHẬT: Chuyển sang MainActivity một cách an toàn và đúng chuẩn.
+     * Hàm này sẽ xóa LoginActivity khỏi stack, người dùng không thể quay lại bằng nút back.
+     */
+    private void goToMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        // Cờ này sẽ xóa tất cả các Activity trước đó và tạo một task mới cho MainActivity
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        // Không cần gọi finish() nữa vì cờ CLEAR_TASK đã làm việc đó
     }
 }

@@ -13,9 +13,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.myapplication.adapter.SlotAdapter;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +26,6 @@ import java.util.Map;
 import static com.example.myapplication.ParkingSlotActivity.ParkingSlotData;
 
 public class ParkingSlotActivity extends AppCompatActivity {
-
-    // ===============================================
-    // 🔔 LỚP MODEL DATA
-    // ===============================================
     public static class ParkingSlotData {
         public static final String STATUS_TRONG = "trong";
         public static final String STATUS_DANG_GUI = "dang_gui";
@@ -42,10 +40,11 @@ public class ParkingSlotActivity extends AppCompatActivity {
         private String trang_thai;
         private String uid_hien_tai;
 
-        // Constructor rỗng bắt buộc cho Firestore
+
+
         public ParkingSlotData() {}
 
-        // Getters
+
         public String getId() { return id; }
         public String getTen_slot() { return ten_slot; }
         public String getTrang_thai() { return trang_thai; }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Existing colors -->
+    <!-- Màu sắc mặc định của project -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -9,36 +9,43 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Additional colors -->
+    <!-- Bảng màu Xanh lá (Green) -->
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_200">#A5D6A7</color> <!-- BỔ SUNG: Màu nhạt hơn cho divider/tag -->
+    <color name="green_500">#4CAF50</color>
+    <color name="green_700">#388E3C</color>
+    <color name="green_900">#1B5E20</color> <!-- BỔ SUNG: Màu đậm hơn cho văn bản quan trọng -->
+
+    <!-- Bảng màu Đỏ (Red) -->
     <color name="red_100">#FFFFCDD2</color>
     <color name="red_500">#F44336</color>
     <color name="red_700">#D32F2F</color>
 
+    <!-- Bảng màu Xanh dương (Blue) -->
     <color name="blue_100">#BBDEFB</color>
     <color name="blue_500">#2196F3</color>
     <color name="blue_700">#1976D2</color>
 
-    <color name="green_100">#C8E6C9</color>
-    <color name="green_500">#4CAF50</color>
-    <color name="green_700">#388E3C</color>
-
+    <!-- Bảng màu Vàng (Yellow) -->
     <color name="yellow_100">#FFF9C4</color>
     <color name="yellow_500">#FFEB3B</color>
     <color name="yellow_700">#FBC02D</color>
 
+    <!-- Bảng màu Cam (Orange) -->
     <color name="orange_100">#FFE0B2</color>
     <color name="orange_500">#FF9800</color>
     <color name="orange_700">#F57C00</color>
 
+    <!-- Bảng màu Xám (Gray) -->
     <color name="gray_100">#F5F5F5</color>
     <color name="gray_300">#E0E0E0</color>
     <color name="gray_500">#9E9E9E</color>
     <color name="gray_700">#616161</color>
     <color name="gray_900">#212121</color>
 
-    <color name="text_primary">#000000</color>
-
-    <color name="text_secondary">#616161</color>
-
+    <!-- Màu sắc cho văn bản và các thành phần UI -->
+    <color name="text_primary">#212121</color> <!-- Đổi sang màu gray_900 cho dễ đọc hơn -->
+    <color name="text_secondary">#757575</color> <!-- Một màu xám khác cho văn bản phụ -->
     <color name="input_background_light">#F5F5F5</color>
+
 </resources>

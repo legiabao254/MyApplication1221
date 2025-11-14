@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SỬA LỖI: Chuyển sang FrameLayout để các View có thể xếp chồng lên nhau -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AdminConfirmDepositActivity">
+
+    <!-- RecyclerView để hiển thị danh sách các giao dịch đang chờ -->
+    <!-- ID đã được đổi để khớp với file Java -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_pending_transactions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_pending_transaction"/>
+
+    <!-- TextView hiển thị khi không có giao dịch nào -->
+    <!-- ID đã được đổi và đặt ở giữa màn hình -->
+    <TextView
+        android:id="@+id/tv_no_pending_transactions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Không có yêu cầu nạp tiền nào đang chờ."
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <!-- ProgressBar hiển thị khi đang xử lý giao dịch -->
+    <!-- BỔ SUNG THÀNH PHẦN CÒN THIẾU VÀ ĐẶT ID CHÍNH XÁC -->
+    <ProgressBar
+        android:id="@+id/progress_bar_admin_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+</FrameLayout>
