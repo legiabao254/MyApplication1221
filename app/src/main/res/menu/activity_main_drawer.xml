@@ -21,6 +21,13 @@
             android:title="@string/menu_gallery"
             android:fontFamily="sans-serif" />
 
+
+
+        <item
+            android:id="@+id/nav_logout"
+            android:title="Đăng xuất"
+            android:icon="@drawable/ic_out" />
+
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
@@ -34,4 +41,11 @@
         android:title="Logout"
         android:fontFamily="sans-serif"
         android:orderInCategory="100" />
+    <item
+        android:id="@+id/nav_parking"
+        android:title="Gửi xe"
+        android:icon="@drawable/ic_local_parking" />
+
+
+
 </menu>

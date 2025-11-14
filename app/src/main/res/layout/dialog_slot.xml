@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="18dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edtSlotName"
+        android:hint="@string/hint_slot_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:autofillHints="none" /> <EditText
+    android:id="@+id/edtSlotStatus"
+    android:hint="@string/hint_slot_status"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:inputType="text"
+    android:minHeight="48dp"
+    android:autofillHints="none"
+    android:layout_marginTop="8dp" /> </LinearLayout>

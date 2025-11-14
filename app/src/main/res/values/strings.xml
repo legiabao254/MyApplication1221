@@ -1,18 +1,28 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="navigation_drawer_open">Mở Drawer</string>
+    <string name="navigation_drawer_close">Đóng Drawer</string>
+
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+
     <string name="action_settings">Settings</string>
+
     <string name="profile_title">Thông tin Tài khoản</string>
     <string name="hint_full_name">Tên đầy đủ của bạn</string>
     <string name="hint_dob">Ngày sinh (dd/mm/yyyy)</string>
     <string name="hint_phone">Số điện thoại</string>
     <string name="hint_address">Địa chỉ</string>
     <string name="btn_save_profile">LƯU THÔNG TIN CẬP NHẬT</string>
+
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+
+
+    <string name="hint_slot_name">Tên chỗ đậu xe</string>
+    <string name="hint_slot_status">Trạng thái (trong/dang_gui/bao_tri)</string>
+
 </resources>

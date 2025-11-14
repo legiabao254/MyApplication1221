@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.*;
 import android.content.Intent;
-import android.content.SharedPreferences; // Import cần thiết
-import android.content.Context; // Import cần thiết
+import android.content.SharedPreferences;
+import android.content.Context;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,8 +14,6 @@ import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 
 public class LoginActivity extends AppCompatActivity {
-
-    // ... (Các khai báo và onCreate giữ nguyên) ...
 
     EditText edtEmail, edtPassword;
     Button btnLogin, btnGoRegister;
@@ -60,22 +58,20 @@ public class LoginActivity extends AppCompatActivity {
                                     .document(uid)
                                     .get()
                                     .addOnSuccessListener(documentSnapshot -> {
-                                        String role = "Không xác định";
+                                        String role = "user";
+
                                         if(documentSnapshot.exists()){
                                             String tempRole = documentSnapshot.getString("role");
                                             if(tempRole != null) role = tempRole;
                                         }
 
-                                        // 🌟 BƯỚC QUAN TRỌNG: LƯU ROLE VÀO SharedPreferences
+                                        // Lưu role vào SharedPreferences
                                         SharedPreferences sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPref.edit();
-                                        editor.putString("USER_ROLE_KEY", role); // Key này phải khớp với key dùng để đọc trong MainActivity
+                                        editor.putString("USER_ROLE_KEY", role.toLowerCase());
                                         editor.apply();
-                                        // --------------------------------------------------
 
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        // ❌ BỎ: intent.putExtra("role", role); // KHÔNG CẦN TRUYỀN QUA INTENT NỮA
-                                        startActivity(intent);
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                         finish();
                                     })
                                     .addOnFailureListener(e -> {

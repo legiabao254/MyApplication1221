@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    tools:context=".ParkingActivity">
+
+    <TextView
+        android:id="@+id/tvParkingTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"
+        tools:text="Phiếu Gửi Xe" />
+
+    <TextView
+        android:id="@+id/tvCurrentStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:layout_marginBottom="24dp"
+        tools:text="Trạng thái: Sẵn sàng gửi xe." />
+
+    <TextView
+        android:id="@+id/tvParkingSlotId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"
+        tools:text="Slot đã chọn: A1" />
+
+    <TextView
+        android:id="@+id/tvStartTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        tools:text="Giờ hiện tại: 14:30:00 11/11/2025" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutLicensePlate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:hint="Biển số xe">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etLicensePlate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapCharacters"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BẮT ĐẦU GỬI XE"
+        android:padding="12dp"
+        android:textSize="18sp"/>
+
+</LinearLayout>

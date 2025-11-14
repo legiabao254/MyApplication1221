@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.*;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.Context;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -62,19 +64,25 @@ public class RegisterActivity extends AppCompatActivity {
 
                             Map<String, Object> userMap = new HashMap<>();
                             userMap.put("email", email);
-                            userMap.put("role", "user"); // default role
+                            userMap.put("role", "user"); // role mặc định
 
                             db.collection("users")
                                     .document(uid)
                                     .set(userMap)
                                     .addOnSuccessListener(aVoid -> {
+
+                                        // ⭐ LƯU ROLE VÀO LOCAL ĐỂ MAINACTIVITY NHẬN ĐÚNG
+                                        SharedPreferences sharedPref = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("USER_ROLE_KEY", "user");
+                                        editor.apply();
+                                        // -------------------------------------------------------
+
                                         Toast.makeText(RegisterActivity.this,
                                                 "Đăng ký thành công",
                                                 Toast.LENGTH_SHORT).show();
-                                        // Đăng nhập luôn sau khi đăng ký
-                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                        intent.putExtra("role", "user");
-                                        startActivity(intent);
+
+                                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                         finish();
                                     })
                                     .addOnFailureListener(e -> {

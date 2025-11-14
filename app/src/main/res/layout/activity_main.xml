@@ -10,7 +10,6 @@
     tools:openDrawer="start"
     android:background="@color/white">
 
-    <!-- KHU VỰC NỘI DUNG CHÍNH -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,7 +23,6 @@
             android:padding="16dp"
             android:background="@color/white">
 
-            <!-- 1. TIÊU ĐỀ CHÀO MỪNG -->
             <TextView
                 android:id="@+id/text_welcome"
                 android:layout_width="match_parent"
@@ -35,7 +33,6 @@
                 android:textColor="@color/black"
                 android:layout_marginBottom="24dp"/>
 
-            <!-- 2. CARD ADMIN DOANH THU (Ẩn mặc định, chỉ hiển thị khi role="admin") -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_admin_revenue_report_main_activity"
                 android:layout_width="match_parent"
@@ -50,16 +47,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="20dp"
-                    android:background="#E0F7FA"> <!-- Light Blue Background -->
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="BÁO CÁO TỔNG QUAN (ADMIN)"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:layout_marginBottom="8dp"/>
+                    android:background="#E0F7FA"> <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BÁO CÁO TỔNG QUAN (ADMIN)"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="8dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -72,7 +67,7 @@
                         android:id="@+id/tv_monthly_revenue_admin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="85.000.000 VNĐ"
+                        android:text="..."
                         android:textSize="28sp"
                         android:textStyle="bold"
                         android:textColor="#004D40"/>
@@ -88,7 +83,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 3. KHU VỰC THỐNG KÊ CHUNG (Hiển thị cho cả Admin và Staff) -->
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +91,6 @@
                 android:columnOrderPreserved="false"
                 android:layout_marginBottom="16dp">
 
-                <!-- CARD 1: Chỗ Trống -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_columnWeight="1"
@@ -105,13 +98,32 @@
                     android:layout_margin="8dp"
                     app:cardElevation="4dp"
                     app:cardCornerRadius="8dp">
-                    <LinearLayout android:orientation="vertical" android:padding="16dp" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:text="Chỗ Trống" android:textSize="14sp"/>
-                        <TextView android:id="@+id/tv_available_slots" android:text="15/50" android:textSize="24sp" android:textStyle="bold" android:textColor="@color/black"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chỗ Trống"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/darker_gray"/>
+
+                        <TextView
+                            android:id="@+id/tv_available_slots"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="36sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/teal_700"/>
+
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- CARD 2: Xe Đang Đỗ -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_columnWeight="1"
@@ -119,14 +131,33 @@
                     android:layout_margin="8dp"
                     app:cardElevation="4dp"
                     app:cardCornerRadius="8dp">
-                    <LinearLayout android:orientation="vertical" android:padding="16dp" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:text="Xe Đang Đỗ" android:textSize="14sp"/>
-                        <TextView android:id="@+id/tv_occupied_vehicles" android:text="35" android:textSize="24sp" android:textStyle="bold" android:textColor="@color/black"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Đang Đỗ"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/darker_gray"/>
+
+                        <TextView
+                            android:id="@+id/tv_occupied_slots"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="36sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"/>
+
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </GridLayout>
 
-            <!-- 4. HÀNH ĐỘNG CỐT LÕI (Cho Staff) -->
             <Button
                 android:id="@+id/btn_staff_check_in"
                 android:layout_width="match_parent"
@@ -138,7 +169,6 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- NAVIGATION VIEW -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
